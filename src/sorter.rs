@@ -42,7 +42,25 @@ use rocket::serde::json::Json;
         Json(sort_post_data_and_return_response(sort_post_data))
     }
 
+    #[derive(Serialize)]
+    #[serde(crate = "rocket::serde")]
+    pub struct SortPostError {
+        message: String
+    }
 
+
+    fn get_sort_post_error() -> Json<SortPostError> {
+        Json(
+            SortPostError {
+                message: String::from("The JSON posted is invalid. Make sure the 'array' field is an array of integers and 'sort_order' is either 'ascending' or 'descending'.")
+            }
+        )
+    }
+
+    #[catch(422)]
+    pub fn unprocessable_entity() -> Json<SortPostError> {
+        get_sort_post_error()
+    }
 
     #[cfg(test)]
     mod sorter_tests {

@@ -1,6 +1,7 @@
 #[macro_use] extern crate rocket;
 use rocket::local::blocking::Client;
 use rocket::http::Status;
+use rocket::serde::json::Json;
 mod sorter;
 
 #[get("/")]
@@ -20,4 +21,5 @@ fn rocket() -> _ {
     rocket::build()
         .mount("/", routes![index])
         .mount("/sort", routes![sorter::sort])
+        .register("/sort", catchers![sorter::unprocessable_entity])
 }
